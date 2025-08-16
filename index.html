@@ -46,16 +46,15 @@
     <p>ここまでは、<a href="https://aoyamakohbo.github.io/AdaptContVib1D_1//">モデル規範適応制御の数値解析(時間微分の差分近似)</a>と同じです。</p>  
 
     <h3>§基底関数による有限要素近似</h3>
-      <p>まず、変位\(y\)の動作範囲を\(\pm d/2\)とし、長さ\(d\)を\(m\)の有限要素に分割します。
-        次に\(m+1\)個の有限要素の節に基底関数\(\phi_i(y)~~(i=0,\cdots, m)\)を配置します。</p>
-
-    <h3>§基底関数非線形性の有限要素近似</h3>
     <p>駆動効率\(\eta\)が変位\(x\)に応じて変化する場合、制御対象\eqref{eq:SysEqn}は非線形システムになります。
-      そこで、<a href="https://aoyamakohbo.github.io/BasisFuncApprox/">基底関数による非線形性の有限要素近似</a>
-      で示した\(n\)個の基底関数\(\phi_i(x)\)を用いて駆動効率\(\eta(x)\)を有限要素近似します。</p>
-    \begin{align}
-      \hat\eta(x) = \sum_{i=0}^m \hat w_i\phi_i(x) \label{eq:Func_eta}
-    \end{align}
+      そこで、駆動効率\(\eta(x)\)を<a href="https://aoyamakohbo.github.io/BasisFuncApprox/">基底関数による非線形性の有限要素近似</a>
+      をします。</p>
+    <p>まず、変位\(x\)の動作範囲を\(\pm d/2\)とし、長さ\(d\)の領域を\(m\)個の有限要素に分割し、
+      \(m+1\)個の有限要素の節に基底関数\(\phi_i(x)~~(i=0,\cdots, m)\)を配置します。
+      次に、基底関数\(\phi_i(x)\)の重み\(\hat w_i\)を用いて駆動効率\(\eta\)を有限要素近似します。</p>
+      \begin{align}
+        \hat\eta(x) = \sum_{i=0}^m \hat w_i\phi_i(x) \label{eq:Func_eta}
+      \end{align}
 
     <h3>§適応制御則</h3>
     <p>制御対象\eqref{eq:SysEqn}の\(\hat\eta\)の有限要素近似\eqref{eq:Func_eta}を構成する\(\hat w_i\)の適応制御則を次式しとます。</p>
@@ -162,7 +161,7 @@
     \begin{align}
       u(n)=\sin(2\pi fnT)+rnd(n).
     \end{align}
-    <p>入力振動数\(f=0.1\)[Hz]、\(rnd(n)\)の最大値は\(0.1\)、カットオフ周波数を\(20\)[Hz]とします。</p>
+    <p>入力振動数\(f=0.1\)[Hz]、ランダム振動\(rnd(n)\)の最大値は\(0.1\)、カットオフ周波数を\(20\)[Hz]とします。</p>
     
     <p>数値実験では式\eqref{eq:Euler}～\eqref{eq:AdaptRuleDgt}を１ステップとします。</p>
 
