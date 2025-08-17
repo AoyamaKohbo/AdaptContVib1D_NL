@@ -159,9 +159,9 @@
 
     <p>入力\(u(n)\)はランダム振動を加えた正弦振動を次式で与えます。</p>
     \begin{align}
-      u(n)=\sin(2\pi fnT)+rnd(n).
+      u(n)=\sin(2\pi fnT)+\mathrm{rnd}(n).
     \end{align}
-    <p>入力振動数\(f=0.1\)[Hz]、ランダム振動\(rnd(n)\)の最大値は\(0.1\)、カットオフ周波数を\(20\)[Hz]とします。</p>
+    <p>入力振動数\(f=0.1\)[Hz]、ランダム振動\(\mathrm{rnd}(n)\)の最大値は\(0.1\)、カットオフ周波数を\(20\)[Hz]とします。</p>
     
     <p>数値実験では式\eqref{eq:Euler}～\eqref{eq:AdaptRuleDgt}を１ステップとします。</p>
 
@@ -172,14 +172,15 @@
     下図に\(\eta(x)/\hat \eta(x)\)を示します。
     適応制御開始から\(\eta(x)/\hat \eta(x)\)は激しく変化しますが、
     適応制御によって\(\hat \eta(x)\)が\(\eta(x)\)を獲得し、
-    \(\eta(x)/\hat \eta(x)\)は\(1\)へと収束していくことを確認できます。</p>
+    3000ステップあたりから\(\eta(x)/\hat \eta(x)\)は\(1\)へと収束していくことを確認できます。</p>
       
     <img src="dηdηhat_r_1_DisInp_0_DistOut_0.jpg" width=600px>
 
-  <p>適応制御則\eqref{eq:AdaptRuleDgt}で獲得した\(\hat \eta(x)\)と\(\eta(x)\)を下図に示します。
-    \(\eta(x)\)を黒い実践で描画します。\(\hat \eta(x)\)は、\(\hat w(x)\)を点で示します。
-    適応制御則\eqref{eq:AdaptRuleDgt}によって獲得された\(\hat \eta(x)\)と\(\eta(x)\)が見事に一致することを確認できます。
-  </p>
+    <p>適応制御則\eqref{eq:AdaptRuleDgt}で獲得した\(\hat \eta(x)\)と\(\eta(x)\)を下図に示します。
+      \(\eta(x)\)を黒い実線で描画します。\(\hat \eta(x)\)は、\(\hat w(x)\)を点で示します。
+      適応制御則\eqref{eq:AdaptRuleDgt}によって獲得された\(\hat \eta(x)\)と\(\eta(x)\)が見事に一致することを確認できます。
+    </p>
+
     <img src="η&ηhat_r_1.jpg" width=600px>
 
    <p><a href="https://aoyamakohbo.github.io/Craftlogy/">->TOP</a></p>
