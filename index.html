@@ -36,7 +36,7 @@
     \ddot x + a\frac{\eta(x)}{\hat\eta}\dot x + b\frac{\eta(x)}{\hat\eta}(x - u) = 0 \label{eq:SysEqn}
     \end{align}
 
-    <p> ここに、\(x\)は位置、\(u\)は位置入力、\(\eta(>0)\)は駆動効率、\(\hat\eta\)は駆動効率\(\eta\)の推定値です。</p> 
+    <p> ここに、\(x\)は位置、\(u\)は位置入力、\(\eta(x)(>0)\)は駆動効率、\(\hat\eta\)は駆動効率\(\eta\)の推定値です。</p> 
 
     <p>目的とする制御性能を規範モデル規範モデルとして次式で与えます。</p>
       \begin{align}
@@ -92,7 +92,7 @@
 
 ここでは制御対象\eqref{eq:Euler}の\(\eta(x)\)を次式とします。
 \begin{align}
-\eta(x) = 1.0+0.5x+0.1x^2
+\eta(x) = 1.0+0.5x+0.1x^2\label{eq:TrueEta}
 \end{align}
 
   <p>規範モデル\eqref{eq:MdlEqn}はサンプル時間\(T=0.005\)[s]として、<a href="https://aoyamakohbo.github.io/VscElsVib1D/">離散時間状態方程式</a>
@@ -140,7 +140,9 @@
       \begin{array}{@{\,}rl}
       \hat w_i(n)&=~\hat w_i(n-1)-\alpha T\frac{v_{FB}(n-1)\varepsilon(n-1)}{\hat\eta(n-1)}\phi_i(x)\\
       v_{FB}(n-1)&=~-a \dot x^\prime(n-1) - b \{x(n-1) - u(n-1)\}\\
-      \varepsilon(n-1) &=~ e(n-1) + c\dot e(n-1)
+      \varepsilon(n-1) &=~ e(n-1) + c\dot e(n-1)\\
+      e(n-1) &=~ x_M(n-1) - x(n-1)\\
+      \dot e(n-1) &=~ \dot x_M(n-1) - \dot x^{\prime}(n-1)  
       \end{array} \label{eq:AdaptRuleDgt}
      \right\}
     \end{align}
@@ -167,7 +169,7 @@
 
     <h3>§数値実験結果</h3>
     <p>有限要素近似\eqref{eq:Func_eta2}の\(m=4\)、初期値\(\hat{w}_i = 1~(i=0,1,2,3,4)\)として、
-      \(\eta/\hat\eta\)の挙動を数値実験により観察します。
+      \(\eta(x)/\hat\eta(x)\)の挙動を数値実験により観察します。
     \(\eta(x)\) は\(-1 \le x \le 1\)に対して\(\eta(x)\)は\(0.51\)から\(1.51\)まで３倍程度変化します。
     下図に\(\eta(x)/\hat \eta(x)\)を示します。
     適応制御開始から\(\eta(x)/\hat \eta(x)\)は激しく変化しますが、
@@ -176,9 +178,10 @@
       
     <img src="dηdηhat_r_1_DisInp_0_DistOut_0.jpg" width=600px>
 
-    <p>適応制御則\eqref{eq:AdaptRuleDgt}で獲得した\(\hat \eta(x)\)と\(\eta(x)\)を下図に示します。
-      \(\eta(x)\)を黒い実線で描画します。\(\hat \eta(x)\)は、\(\hat w(x)\)を点で示します。
-      適応制御則\eqref{eq:AdaptRuleDgt}によって獲得された\(\hat \eta(x)\)と\(\eta(x)\)が見事に一致することを確認できます。
+    <p>制御対象\eqref{eq:SysEqn}に設定した\(\eta(x)\)(式\eqref{eq:TrueEta})と適応制御則\eqref{eq:AdaptRuleDgt}で獲得した\(\hat \eta(x)\)(式\eqref{eq:Func_eta2})を下図に示します。
+      \(\eta(x)\)を黒い実線で描画します。\(\hat \eta(x)\)は、\(\hat w(x)\)を赤い点線で示します。
+      適応制御則\eqref{eq:AdaptRuleDgt}によって獲得された\(\hat \eta(x)\)が\(\eta(x)\)を見事に近似し、
+      再現することを確認できます。
     </p>
 
     <img src="η&ηhat_r_1.jpg" width=600px>
