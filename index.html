@@ -57,13 +57,13 @@
       \end{align}
 
     <h3>§適応制御則</h3>
-    <p>制御対象\eqref{eq:SysEqn}の\(\hat\eta\)の有限要素近似\eqref{eq:Func_eta}を構成する\(\hat w_i\)の適応制御則を次式しとます。</p>
+    <p>制御対象\eqref{eq:SysEqn}の\(\hat\eta(x)\)の有限要素近似\eqref{eq:Func_eta}を構成する\(\hat w_i\)の適応制御則を次式しとます。</p>
     
     <p>適応制御則：</p>
     \begin{align}
       \left.
         \begin{array}{@{\,}rl}
-        \dot{\hat{w}_i} &=~ -\alpha \frac{v_{FB}\varepsilon}{\hat\eta}\phi_i(x)\\
+        \dot{\hat{w}_i} &=~ -\alpha \displaystyle\frac{v_{FB}\varepsilon}{\hat\eta(x)}\phi_i(x)\\
         v_{FB} &=~-a \dot x - b (x - u)\\
         \varepsilon &=~ e + c\dot e,\\
         e &=~ x_M - x.
@@ -83,9 +83,9 @@
 \begin{align}
   \left.
     \begin{array}{@{\,}rl}
-       \ddot x_k(n)&=~ -a\frac{\eta}{\hat\eta} \dot x_k(n) - b\frac{\eta}{\hat\eta}\{x_k(n) - u(n)\},\\
+       \ddot x_k(n)&=~ -a\displaystyle\frac{\eta(x)}{\hat\eta(x)} \dot x_k(n) - b\displaystyle\frac{\eta(x)}{\hat\eta(x)}\{x_k(n) - u(n)\},\\
        \dot x_{k+1}(n)&=~ \dot x_k(n)+\ddot x_k(n)\varDelta t,\\
-       x_{k+1}(n)&=~ x_k(n) + \dot x_k(n)\varDelta t + \frac{1}{2}\ddot x_k(n)\varDelta t^2.
+       x_{k+1}(n)&=~ x_k(n) + \dot x_k(n)\varDelta t + \displaystyle\frac{1}{2}\ddot x_k(n)\varDelta t^2.
     \end{array} \label{eq:Euler}
   \right\}  
 \end{align}
@@ -138,7 +138,7 @@
     \begin{align}
     \left.
       \begin{array}{@{\,}rl}
-      \hat w_i(n)&=~\hat w_i(n-1)-\alpha T\frac{v_{FB}(n-1)\varepsilon(n-1)}{\hat\eta(n-1)}\phi_i(x)\\
+      \hat w_i(n)&=~\hat w_i(n-1)-\alpha T\displaystyle\frac{v_{FB}(n-1)\varepsilon(n-1)}{\hat\eta(x)}\phi_i(x)\\
       v_{FB}(n-1)&=~-a \dot x^\prime(n-1) - b \{x(n-1) - u(n-1)\}\\
       \varepsilon(n-1) &=~ e(n-1) + c\dot e(n-1)\\
       e(n-1) &=~ x_M(n-1) - x(n-1)\\
@@ -150,7 +150,7 @@
     <p>変位\(x \in [p_{i-1},~p_{i}]\)のとき関係する基底関数は\(\phi_{i-1}(x)\)と\(\phi_i(x)\)だけになり(他は\(0\))、
       有限要素近似\eqref{eq:Func_eta}は次式となります。</p>
     \begin{align}
-      \hat\eta(x) = \hat w_i\phi_{i-1}(x) + \hat w_i\phi_i(x)~~~(i=1,\cdots,m) \label{eq:Func_eta2}
+      \hat\eta(x) = \hat w_{i-1}\phi_{i-1}(x) + \hat w_i\phi_i(x)~~~(x \in [p_{i-1},~p_{i}) \label{eq:Func_eta2}
     \end{align}
 
     <p>有限要素近似\eqref{eq:Func_eta2}で示すように、変位\(x \in [p_{i-1},~p_{i}]~(m=1,\cdots,m)\)のとき
@@ -159,13 +159,17 @@
       <a href="https://aoyamakohbo.github.io/BasisFuncApprox/">基底関数による非線形性の有限要素近似</a>
       の利点です。</p>
 
-    <p>入力\(u(n)\)はランダム振動を加えた正弦振動を次式で与えます。</p>
+    <p>数値実験では式\eqref{eq:Euler}～\eqref{eq:AdaptRuleDgt}を１ステップとします。</p>
+
+    <h3>§入力信号</h3>
+    <p>各有限要素内での適応を促すために、入力\(u(n)\)は<a href="https://aoyamakohbo.github.io/random/">乱数によるランダム信号</a>を加えた正弦振動を次式で与えます。</p>
     \begin{align}
       u(n)=\sin(2\pi fnT)+\mathrm{rnd}(n).
     \end{align}
     <p>入力振動数\(f=0.1\)[Hz]、ランダム振動\(\mathrm{rnd}(n)\)の最大値は\(0.1\)、カットオフ周波数を\(20\)[Hz]とします。</p>
-    
-    <p>数値実験では式\eqref{eq:Euler}～\eqref{eq:AdaptRuleDgt}を１ステップとします。</p>
+    <p>下図に乱数によるランダム信号を加えた正弦波入力信号のグラフを掲示します。</p>
+
+    <img src="usin_rnd_flt20Hz.jpg" width=600px>
 
     <h3>§数値実験結果</h3>
     <p>有限要素近似\eqref{eq:Func_eta2}の\(m=4\)、初期値\(\hat{w}_i = 1~(i=0,1,2,3,4)\)として、
