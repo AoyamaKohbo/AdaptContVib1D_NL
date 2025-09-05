@@ -18,179 +18,86 @@
   </head>
 
   <body>
-    <h3>モデル規範適応制御の数値解析(非線形性の有限要素近似)</h3>
+    <h3>モデル規範適応制御の数値解析(適応制御則の動作メカニズム)</h3>
+
+    <h3>§モデル規範適応制御</h3>
     <p><a href="https://aoyamakohbo.github.io/AdaptContVib1D/">モデル規範適応制御の数値解析(数値実験)</a>
-      では適応制御対象の駆動効率\(\eta\)が定数の場合について記述しています。
-      しかし、駆動力の発生源として電磁力を使用する場合、
-      電磁石鉄芯と駆動対象(鉄)の間隔(gap)に依存して駆動力が大きく変化します。
-      これは制御対象における駆動効率\(\eta\)が変位に依存して変化することと等価です。
-      そこで、ここでは駆動効率\(\eta\)が変位\(x\)に応じて変化する場合のモデル規範適応制御を確認します。
-      ここでも<a href="https://aoyamakohbo.github.io/AdaptContVib1D_1/">モデル規範適応制御の数値解析(時間微分の差分近似)</a>
-      と同様に変位の時間微分\(\dot x\)を差分近似します。</p>
+    では、下記の設定に対して数値実験を実施し、超安定論から導いた適応制御則が有効に動作することを確認しています。</p>
 
-    <h3>§モデル規範適応制御の定式化</h3>
-    <p>変位\(x\)に応じて駆動効率\(\eta\)が変化する場合(\(\eta(x)\))について<a href="https://aoyamakohbo.github.io/AdaptCont/">超安定論によるモデル規範適応制御</a>
-      を数値解析で確認します。</p>
-
+    <p>適応制御対象：</p>
     \begin{align}
-    \ddot x + a\frac{\eta(x)}{\hat\eta(x)}\dot x + b\frac{\eta(x)}{\hat\eta(x)}(x - u) = 0 \label{eq:SysEqn}
+    \ddot x + a \frac{\eta}{\hat\eta}\dot x + b\frac{\eta}{\hat\eta}(x - u) = 0 \label{eq:SysEqn2}
     \end{align}
+    <p> ここに、\(x\)は制御対象の変位です。係数\(a=25.12\)、\(b=3943\)、\(\hat{\eta}=1\)(初期値)です。</p>
 
-    <p> ここに、\(x\)は位置、\(u\)は位置入力、\(\eta(x)(>0)\)は駆動効率、\(\hat\eta\)は駆動効率\(\eta\)の推定値です。</p> 
+    <p>規範モデル：</p>
+    \begin{align}
+    \ddot x_M + a\dot x_M + b(x_M - u)= 0 \label{eq:MdlEqn}
+    \end{align}
+  <p> ここに、\(x_M\)は規範モデルの変位です。</p>
 
-    <p>目的とする制御性能を規範モデル規範モデルとして次式で与えます。</p>
-      \begin{align}
-        \ddot x_M + a\dot x_M + b(x_M - u)= 0 \label{eq:MdlEqn}
-      \end{align}
-    <p> ここに、\(x_M\)は規範モデルの位置です。係数\(a=50.24\)、\(b=15775\)とします。</p>
-    <p>ここまでは、<a href="https://aoyamakohbo.github.io/AdaptContVib1D_1//">モデル規範適応制御の数値解析(時間微分の差分近似)</a>と同じです。</p>  
-
-    <h3>§基底関数による有限要素近似</h3>
-    <p>駆動効率\(\eta\)が変位\(x\)に応じて変化する場合、制御対象\eqref{eq:SysEqn}は非線形システムになります。
-      そこで、駆動効率\(\eta(x)\)を<a href="https://aoyamakohbo.github.io/BasisFuncApprox/">基底関数による非線形性の有限要素近似</a>
-      をします。</p>
-    <p>まず、変位\(x\)の動作範囲を\(\pm d/2\)とし、長さ\(d\)の領域を\(m\)個の有限要素に分割し、
-      \(m+1\)個の有限要素の節に基底関数\(\phi_i(x)~~(i=0,\cdots, m)\)を配置します。
-      次に、基底関数\(\phi_i(x)\)の重み\(\hat w_i\)を用いて駆動効率\(\eta\)を有限要素近似します。</p>
-      \begin{align}
-        \hat\eta(x) = \sum_{i=0}^m \hat w_i\phi_i(x) \label{eq:Func_eta}
-      \end{align}
-
-    <h3>§適応制御則</h3>
-    <p>制御対象\eqref{eq:SysEqn}の\(\hat\eta(x)\)の有限要素近似\eqref{eq:Func_eta}を構成する\(\hat w_i\)の適応制御則を次式しとます。</p>
-    
-    <p>適応制御則：</p>
+  <h3>§適応制御則</h3>
+  <p>ここではどのようなメカニズムで適応制御が実現されるのかを確認します。適応制御則は次式で与えられます。</p>
     \begin{align}
       \left.
-        \begin{array}{@{\,}rl}
-        \dot{\hat{w}_i} &=~ -\alpha \displaystyle\frac{v_{FB}\varepsilon}{\hat\eta(x)}\phi_i(x)\\
-        v_{FB} &=~-a \dot x - b (x - u)\\
-        \varepsilon &=~ e + c\dot e,\\
-        e &=~ x_M - x.
-        \end{array}
-      \right\}  \label{eq:AdaptRule}
-    \end{align}
-
-    <p>強誠実条件：</p>
-      \begin{align}
-        c > \frac{1}{a} \label{eq:STR_Cond}
-      \end{align}
-
-<h3>§数値実験</h3>
-  <p>制御対象\eqref{eq:SysEqn}を<a href="https://aoyamakohbo.github.io/EulerMtd/">オイラー法による逐次数値積分</a> により数値計算します。</p>
-  <p>オイラー法の時間刻み\(\varDelta t = 0.0001\)[s]として計算します。\(x_0(n)=x(n)\)として</p>
-
-\begin{align}
-  \left.
-    \begin{array}{@{\,}rl}
-       \ddot x_k(n)&=~ -a\displaystyle\frac{\eta(x)}{\hat\eta(x)} \dot x_k(n) - b\displaystyle\frac{\eta(x)}{\hat\eta(x)}\{x_k(n) - u(n)\},\\
-       \dot x_{k+1}(n)&=~ \dot x_k(n)+\ddot x_k(n)\varDelta t,\\
-       x_{k+1}(n)&=~ x_k(n) + \dot x_k(n)\varDelta t + \displaystyle\frac{1}{2}\ddot x_k(n)\varDelta t^2.
-    \end{array} \label{eq:Euler}
-  \right\}  
-\end{align}
-
-ここでは制御対象\eqref{eq:Euler}の\(\eta(x)\)を次式とします。
-\begin{align}
-\eta(x) = 1.0+0.5x+0.1x^2\label{eq:TrueEta}
-\end{align}
-
-  <p>規範モデル\eqref{eq:MdlEqn}はサンプル時間\(T=0.005\)[s]として、<a href="https://aoyamakohbo.github.io/VscElsVib1D/">離散時間状態方程式</a>
-    で計算します。</p>
-    \begin{align}
-      \left[
-        \begin{array}{@{\,}l}
-          x_M(n+1)\\
-          \dot x_M(n+1)
-        \end{array}
-      \right]
-      =
-      \left[
-        \begin{array}{@{\,}cc}
-          0.9531&0.8241\\
-          -65.26&0.6163
-        \end{array}
-      \right]
-      \left[
-        \begin{array}{@{\,}l}
-          x_M(n)\\
-          \dot x_M(n)
-        \end{array}
-      \right]
-      +
-      \left[
-      \begin{array}{@{\,}c}
-        -0.1759\\
-        65.26
-      \end{array}
-    \right]u(n). \label{eq:StateEq}
-    \end{align} 
-    <p>離散時間状態方程式\eqref{eq:StateEq}を１回実行する間に式\eqref{eq:Euler}を\(T/\varDelta t=50\)回(\(k=0\cdots 49\))実行します。</p>
-    <p>現実の制御対象では出力\(y=x\)以外の状態量は計測できませんので、
-      ここでは変位の時間微分\(\dot x\)を中央差分で近似します。</p>
-    \begin{align}
-    \dot x^\prime(n) = \frac{x(n+1)-x(n-1)}{2T} \label{eq:DiffX}
-    \end{align}
-    
-    <p>中央差分\eqref{eq:DiffX}で\(\dot x^\prime\)の現在値\(\dot x^\prime(n)\)の計算には未来値が必要となってしまいます。
-      そこで、適応制御則\eqref{eq:AdaptRule}には\(x\)、\(\dot x\)、\(u\)には1ステップ過去値\(x(n-1)\)、\(\dot x^{\prime}(n-1)\)、\(u(n-1)\)を採用し、
-      \(\dot{\hat{w}_i}(n)=\{\hat{w}_i(n)-\hat{w}_i(n-1)\}/T\)と近似して適応制御則\eqref{eq:AdaptRule}を次式とします。</p>
-    \begin{align}
-    \left.
       \begin{array}{@{\,}rl}
-      \hat w_i(n)&=~\hat w_i(n-1)-\alpha T\displaystyle\frac{v_{FB}(n-1)\varepsilon(n-1)}{\hat\eta(x)}\phi_i(x)\\
-      v_{FB}(n-1)&=~-a \dot x^\prime(n-1) - b \{x(n-1) - u(n-1)\}\\
-      \varepsilon(n-1) &=~ e(n-1) + c\dot e(n-1)\\
-      e(n-1) &=~ x_M(n-1) - x(n-1)\\
-      \dot e(n-1) &=~ \dot x_M(n-1) - \dot x^{\prime}(n-1)  
-      \end{array} \label{eq:AdaptRuleDgt}
-     \right\}
-    \end{align}
+      \dot{\hat{\eta}} &=~ -\alpha \displaystyle\frac{v_{FB}}{\hat\eta}\varepsilon,\\
+      v_{FB} &=~ -a\dot x - b(x - u),\\
+      \varepsilon &=~ e + c\dot e,\\
+      e &=~ x_M - x.
+      \end{array}
+      \right\} \label{eq:AdaptRule0}    
+      \end{align}
+  <p><a href="https://aoyamakohbo.github.io/AdaptContVib1D/">モデル規範適応制御の数値解析(数値実験)</a>
+    では、\(c=2/25.12\)、\(\hat\eta=1\)として適応制御則\eqref{eq:AdaptRule0}により、\(\eta/\hat{\eta}=1\)に収束することを確認しています。</p>
+ <p>ここでは、
+    適応制御対象\eqref{eq:SysEqn2}の\(\eta=0.5 (< \hat{\eta})\)と\(\eta=2.0 (> \hat{\eta})\)の場合について、
+    適応制御則\eqref{eq:AdaptRule0}を構成する\(v_{FB}\)と\(\varepsilon\)の動作を観察します。</p>
+ 
+ <h3>§数値実験結果</h3>
+ <p>まず、下図は\(\eta=0.5\)の場合について\(-v_{FB}\)と\(\varepsilon\)を描画したグラフです。
+    振幅は比較できるように調整しています。\(-v_{FB}\)と\(\varepsilon\)の位相がほぼ反転していることを確認できます。</p>
+  <img src="v_FB_ε050.jpg" width=500px>
+    
+  <p>下図は\(-v_{FB}\)と\(\varepsilon\)の積\(-v_{FB}\varepsilon\)を描画したグラフです。
+      ただし、グラフには係数\(\alpha\)が掛けてあります。
+      \(-v_{FB}\)と\(\varepsilon\)の位相が反転しているので、
+      両者を掛け合わせた\(-v_{FB}\varepsilon\)はマイナスになります。
+      したがって、\(-v_{FB}\)\(\varepsilon\)のグラフはマイナス側(下側)にシフトしています。
+      すなわち、式\eqref{eq:AdaptRule0}で表される\(\hat{\eta}\)の時間増分\(\dot{\hat{\eta}}\)は負(\(\dot{\hat{\eta}} < 0\))となっています。</p>    
+  <img src="v_FB×ε050.jpg" width=500px>
+    
+  <p>次に、下図は\(\eta=2.0\)の場合について\(-v_{FB}\)と\(\varepsilon\)を描画したグラフです。
+      振幅は比較できるように調整しています。
+      \(-v_{FB}\)と\(\varepsilon\)の位相がかなり揃っていることを確認できます。</p>
+  <img src="v_FB_ε200.jpg" width=500px>
 
-    <p>変位\(x \in [p_{i-1},~p_{i}]\)のとき関係する基底関数は\(\phi_{i-1}(x)\)と\(\phi_i(x)\)だけになり(他は\(0\))、
-      有限要素近似\eqref{eq:Func_eta}は次式となります。</p>
-    \begin{align}
-      \hat\eta(x) = \hat w_{i-1}\phi_{i-1}(x) + \hat w_i\phi_i(x)~~~(x \in [p_{i-1},~p_{i}) \label{eq:Func_eta2}
-    \end{align}
+  <p>下図は\(-v_{FB}\)と\(\varepsilon\)の積\(-v_{FB}\varepsilon\)を描画したグラフです。
+      \(-v_{FB}\)と\(\varepsilon\)の位相が揃っているので、
+      両者を掛け合わせた\(-v_{FB}\varepsilon\)はプラスになります。
+      したがって、\(-v_{FB}\varepsilon\)はプラス側(上側)にシフトしています。
+      すなわち、式\eqref{eq:AdaptRule0}で表される\(\hat{\eta}\)の時間増分\(\dot{\hat{\eta}}\)は正(\(\dot{\hat{\eta}} > 0\))となっています。</p>       
+  <img src="v_FB×ε200.jpg" width=500px>
 
-    <p>有限要素近似\eqref{eq:Func_eta2}で示すように、変位\(x \in [p_{i-1},~p_{i}]~(m=1,\cdots,m)\)のとき
-      関係する基底関数は\(\phi_{i-1}(x)\)と\(\phi_i(x)\)だけになり、
-      適応制御則\eqref{eq:AdaptRuleDgt}と駆動効率\eqref{eq:Func_eta2}の計算は有限要素分割数\(m\)に関係しないことが、
-      <a href="https://aoyamakohbo.github.io/BasisFuncApprox/">基底関数による非線形性の有限要素近似</a>
-      の利点です。</p>
+  <p>下図は\(\eta=0.5(< \hat{\eta})\)と\(\eta=2.0(> \hat{\eta})\)の場合について積\(-v_{FB}\varepsilon\)を描画したグラフです。</p>
+  <p>\(\eta=0.5\)(赤線)では\(-v_{FB}\varepsilon < 0\)(負)となり、
+      \(\hat{\eta}\)の時間増分\(\dot{\hat{\eta}} < 0\)(負)となるので\(\hat{\eta}\)は1から減少し、
+      \(\hat{\eta}=0.5\)(\(\eta/\hat\eta=1\))に収束します。</p>
+   <p>\(\eta=2.0\)(青線)では\(-v_{FB}\varepsilon >0\)(正)となり、
+      \(\hat{\eta}\)の時間増分\(\dot{\hat{\eta}} > 0\)(正)となるので\(\hat{\eta}\)は1から増加し、
+      \(\hat{\eta}=2.0\)(\(\eta/\hat\eta=1\))に収束します。</p>
+  <img src="v_FB_ε200_050.jpg" width=500px>
 
-    <p>数値実験では式\eqref{eq:Euler}～\eqref{eq:AdaptRuleDgt}を１ステップとします。</p>
+  <p>\(\hat{\eta} > \eta\)の場合は\(\dot{\hat{\eta}}\)は負となり、
+      適応制御則\eqref{eq:AdaptRule0}は\(\hat\eta\)を減少させるように動作して\(-v_{FB}\varepsilon\)、
+      すなわち、\(\dot{\hat{\eta}}\)は\(0\)に収束しています。</p>
+  <p>\(\hat \eta < \eta\)の場合は\(\dot{\hat \eta}\)は正となり、
+      適応制御則\eqref{eq:AdaptRule0}は\(\hat\eta\)を増加させるように動作して\(-v_{FB}\varepsilon\)、
+      すなわち、\(\dot{\hat{\eta}}\)は\(0\)に収束しています。</p>
+  <p>以上のことから、適応制御則\eqref{eq:AdaptRule0}は\(\hat\eta\)に対してネガティブフィードバックとして動作し、
+    \(\eta/\hat{\eta}=1\)に収束します。</p>
 
-    <h3>§入力信号</h3>
-    <p>各有限要素内での適応を促すために、入力\(u(n)\)は<a href="https://aoyamakohbo.github.io/random/">乱数によるランダム信号</a>を加えた正弦振動を次式で与えます。</p>
-    \begin{align}
-      u(n)=\sin(2\pi fnT)+\mathrm{rnd}(n).
-    \end{align}
-    <p>入力振動数\(f=0.1\)[Hz]、ランダム振動\(\mathrm{rnd}(n)\)の最大値は\(0.1\)、カットオフ周波数を\(20\)[Hz]とします。</p>
-    <p>下図に乱数によるランダム信号を加えた正弦波入力信号のグラフを掲示します。</p>
-
-    <img src="usin_rnd_flt20Hz.jpg" width=600px>
-
-    <h3>§数値実験結果</h3>
-    <p>有限要素近似\eqref{eq:Func_eta2}の\(m=4\)、初期値\(\hat{w}_i = 1~(i=0,1,2,3,4)\)として、
-      \(\eta(x)/\hat\eta(x)\)の挙動を数値実験により観察します。
-    \(\eta(x)\) は\(-1 \le x \le 1\)に対して\(\eta(x)\)は\(0.51\)から\(1.51\)まで３倍程度変化します。
-    下図に\(\eta(x)/\hat \eta(x)\)を示します。
-    適応制御開始から\(\eta(x)/\hat \eta(x)\)は激しく変化しますが、
-    適応制御によって\(\hat \eta(x)\)が\(\eta(x)\)を獲得し、
-    3000ステップあたりから\(\eta(x)/\hat \eta(x)\)は\(1\)へと収束していくことを確認できます。</p>
-      
-    <img src="dηdηhat_r_1_DisInp_0_DistOut_0.jpg" width=600px>
-
-    <p>制御対象\eqref{eq:SysEqn}に設定した\(\eta(x)\)(式\eqref{eq:TrueEta})と適応制御則\eqref{eq:AdaptRuleDgt}で獲得した\(\hat \eta(x)\)(式\eqref{eq:Func_eta2})を下図に示します。
-      \(\eta(x)\)を黒い実線で描画します。\(\hat \eta(x)\)は、\(\hat w(x)\)を赤い点線で示します。
-      適応制御則\eqref{eq:AdaptRuleDgt}によって獲得された\(\hat \eta(x)\)が\(\eta(x)\)を見事に近似し、
-      再現することを確認できます。
-    </p>
-
-    <img src="η&ηhat_r_1.jpg" width=600px>
-
-   <p><a href="https://aoyamakohbo.github.io/Craftlogy/">->TOP</a></p>
+  <p><a href="https://aoyamakohbo.github.io/Craftlogy/">->TOP</a></p>
 </body>
 
 </html>
